@@ -1,5 +1,6 @@
 """
-Builds output/hero.png, the image that fills the body of the Wallet pass.
+Builds output/hero.png, the image that fills the body of the Wallet pass,
+and output/preview.png, a rough mock of the whole card front.
 
 Layout, top to bottom: role lines, a gap, contact rows (icon + text),
 then the QR with the "Yes. It's a QR." tagline beside it.
@@ -82,7 +83,24 @@ def build_hero() -> Image.Image:
     return hero.convert("RGB")
 
 
+def build_preview(hero: Image.Image, name: str = "Veertej Sehdave") -> Image.Image:
+    """Approximates the card front. Wallet draws the name itself in its own
+    font and size, so treat this as a layout check, not a pixel match."""
+    top = 170                  # blank card-title row + the name in Wallet's header line
+    front = Image.new("RGB", (W, top + H), BLUE)
+    ImageDraw.Draw(front).text((PAD_X, top - 14), name, font=font("Inter-SemiBold", 64), fill=WHITE, anchor="ls")
+    front.paste(hero, (0, top))
+
+    canvas = Image.new("RGB", (W + 80, top + H + 80), (242, 242, 242))
+    mask = Image.new("L", front.size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, W - 1, top + H - 1), radius=40, fill=255)
+    canvas.paste(front, (40, 40), mask)
+    return canvas
+
+
 if __name__ == "__main__":
     OUTPUT.mkdir(exist_ok=True)
-    build_hero().save(OUTPUT / "hero.png")
-    print(f"wrote {OUTPUT / 'hero.png'}")
+    hero = build_hero()
+    hero.save(OUTPUT / "hero.png")
+    build_preview(hero).save(OUTPUT / "preview.png")
+    print(f"wrote {OUTPUT / 'hero.png'} and {OUTPUT / 'preview.png'}")
