@@ -28,7 +28,7 @@ CONTACTS = [
     ("phone", "+1 (548)-577-3771"),
     ("github", "github.com/VS3hdav3"),
 ]
-TAGLINE = ("Yes.", "It’s a", "QR.")   # one line each
+TAGLINE = ("Yes.", "It’s a QR.")
 CARD_TITLE = "⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅"   # keep in sync with create_pass.py
 
 # Inter has no glyph for some of the title's symbols, so the preview falls back
@@ -121,14 +121,12 @@ def build_hero() -> Image.Image:
     ImageDraw.Draw(mask).rounded_rectangle((0, 0, size - 1, size - 1), radius=18, fill=255)
     hero.paste(qr, (PAD_X, y), mask)
 
-    # Tagline at the largest size where its widest line fits beside the QR,
-    # one line per entry, centred vertically against the QR.
+    # The tagline shrinks to fit the space the bigger QR leaves beside it.
     tx = PAD_X + size + TAG_GAP
-    tag_font = fit_font("InterDisplay-Bold", TAGLINE, W - tx - TAG_MARGIN, start=200)
-    line_h = round(tag_font.size * 1.1)
-    first = y + size / 2 - line_h * len(TAGLINE) / 2 + tag_font.size * 0.9
-    for i, line in enumerate(TAGLINE):
-        d.text((tx, first + i * line_h), line, font=tag_font, fill=WHITE, anchor="ls")
+    tag_font = fit_font("InterDisplay-Bold", TAGLINE, W - tx - TAG_MARGIN)
+    line_h, mid = round(tag_font.size * 1.15), y + size / 2
+    d.text((tx, mid - line_h * 0.1), TAGLINE[0], font=tag_font, fill=WHITE, anchor="ls")
+    d.text((tx, mid + line_h * 0.9), TAGLINE[1], font=tag_font, fill=WHITE, anchor="ls")
 
     return hero.convert("RGB")
 

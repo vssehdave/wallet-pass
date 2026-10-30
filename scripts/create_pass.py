@@ -35,7 +35,7 @@ PHONE_E164 = "+15485773771"
 PHONE_DISPLAY = "+1 (548)-577-3771"
 BG_HEX = "#1A76E8"
 CLASS_SUFFIX = "personal_qr_card"
-OBJECT_SUFFIX = "veertej_sehdave_v6"   # bump to issue a fresh pass; Wallet caches by ID
+OBJECT_SUFFIX = "veertej_sehdave_v7"   # bump to issue a fresh pass; Wallet caches by ID
 
 # Google requires a non-empty cardTitle (the small top-row text above the
 # name). Blank or whitespace-only values are rejected as an empty LocalizedString.
