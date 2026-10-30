@@ -15,7 +15,8 @@ line, then a hero image. Wallet draws its own fields in its own fonts and sizes,
 and it can only render plain black barcodes. So this project:
 
 - puts my name in the **header** line, the largest text Wallet allows
-- puts "Digital Business Card" in the small **card title** row and drops the logo
+- shows my photo in the **logo** circle at the top
+- puts "Digital Business Card" in the small **card title** row
 - bakes everything else into **`output/hero.png`**: the role lines, contact
   rows with icons, and the artistic QR with its tagline
 - adds email, phone, GitHub and LinkedIn as tappable links on the **back of the pass**
@@ -38,6 +39,7 @@ scripts/
   create_pass.py       signs the pass and prints the save link
 output/
   hero.png             served publicly from this repo for Wallet to fetch
+  logo.jpg             photo for the logo circle, also served publicly
   preview.png          rough mock of the card front
 ```
 
@@ -75,7 +77,16 @@ python scripts/prep_image.py photo.jpg                   # centre crop
 python scripts/prep_image.py photo.jpg --focus 0.5 0.0   # top middle
 ```
 
-`--focus X Y` sets the crop centre as fractions of width and height. Images
+`--focus X Y` sets the crop centre as fractions of width and height, and
+`--zoom` crops tighter (e.g. `0.4` for a face close-up):
+
+```bash
+python scripts/prep_image.py photo.jpg --focus 0.47 0.28 --zoom 0.43 --size 660
+```
+
+For the logo, Google asks for a square image of at least 660x660, unmasked;
+Wallet does the circle crop itself. `output/logo.jpg` is a square photo used
+whole, set through `LOGO_URL`. Images
 smaller than 1176 px are never upscaled. Results go to `output/prepped/`, which
 is gitignored. Save the generated QR from WOW QR as `assets/qr/qr.png`.
 
