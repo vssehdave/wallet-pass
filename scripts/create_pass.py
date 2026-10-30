@@ -35,7 +35,7 @@ PHONE_E164 = "+15485773771"
 PHONE_DISPLAY = "+1 (548)-577-3771"
 BG_HEX = "#1A76E8"
 CLASS_SUFFIX = "personal_qr_card"
-OBJECT_SUFFIX = "veertej_sehdave_v4"   # bump to issue a fresh pass; Wallet caches by ID
+OBJECT_SUFFIX = "veertej_sehdave_v6"   # bump to issue a fresh pass; Wallet caches by ID
 
 # Google requires a non-empty cardTitle (the small top-row text above the
 # name). Blank or whitespace-only values are rejected as an empty LocalizedString.
@@ -47,6 +47,12 @@ def env(key: str) -> str:
     if not value:
         sys.exit(f"Missing {key}. Copy .env.example to .env and fill it in.")
     return value
+
+
+def bust(url: str) -> str:
+    """Tags an image URL with the object version. Google caches images by URL,
+    so a changed hero.png at the same address could otherwise show stale."""
+    return f"{url}{'&' if '?' in url else '?'}v={OBJECT_SUFFIX.rsplit('_', 1)[-1]}"
 
 
 def lv(value: str) -> dict:
@@ -63,7 +69,7 @@ def build_pass(issuer_id: str, hero_url: str, logo_url: str = "", barcode: bool 
         "cardTitle": lv(CARD_TITLE),
         "header": lv(NAME),
         "heroImage": {
-            "sourceUri": {"uri": hero_url},
+            "sourceUri": {"uri": bust(hero_url)},
             "contentDescription": lv(
                 "Analytics Engineer Intern @ Ratehub.ca, Statistics @ UWaterloo '28. "
                 f"{EMAIL}, {PHONE_DISPLAY}, github.com/VS3hdav3. QR code to LinkedIn."
@@ -84,7 +90,7 @@ def build_pass(issuer_id: str, hero_url: str, logo_url: str = "", barcode: bool 
         # Wallet crops the logo into a circle; without one it shows a
         # placeholder with the first letter of the name.
         generic_object["logo"] = {
-            "sourceUri": {"uri": logo_url},
+            "sourceUri": {"uri": bust(logo_url)},
             "contentDescription": lv(f"Photo of {NAME}"),
         }
     if barcode:
