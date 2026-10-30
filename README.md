@@ -4,9 +4,19 @@ A digital business card for Google Wallet. It carries my roles, contact details
 and an artistic QR code that opens my LinkedIn. Pull it up on my phone and
 anyone can scan it.
 
-<p align="center">
-  <img src="output/preview.png" alt="Card preview" width="420">
-</p>
+## In Google Wallet
+
+| Card view | Opened |
+|:---:|:---:|
+| <img src="docs/screenshots/wallet-card.png" alt="Card view" width="300"> | <img src="docs/screenshots/wallet-expanded.png" alt="Opened pass" width="300"> |
+
+In the wallet the pass shows as a compact card: my photo, the symbol row and
+my name, then the hero image with my roles, contact details and the QR.
+Opening it shows the same content full screen, with email, phone, GitHub and
+LinkedIn as tappable links underneath.
+
+The `[TEST ONLY]` prefix is added by Google while the issuer account is in
+demo mode, and goes away once publishing access is approved.
 
 ## How it works
 
@@ -19,7 +29,7 @@ and it can only render plain black barcodes. So this project:
 - puts a decorative row of symbols in the small **card title** row
 - bakes everything else into **`output/hero.png`**: the role lines, contact
   rows with icons, and the artistic QR with its tagline
-- adds email, phone, GitHub and LinkedIn as tappable links on the **back of the pass**
+- adds email, phone, GitHub and LinkedIn as tappable **links** below the card when it's opened
 
 The pass itself is a signed JWT inside an "Add to Google Wallet" link. No API
 calls or server are needed. Google reads the pass definition from the token
@@ -40,7 +50,8 @@ scripts/
 output/
   hero.png             served publicly from this repo for Wallet to fetch
   logo.jpg             photo for the logo circle, also served publicly
-  preview.png          rough mock of the card front
+  preview.png          rough mock of the card front, for checking layout changes
+docs/screenshots/      the pass as it looks in Google Wallet
 ```
 
 ## Setup
