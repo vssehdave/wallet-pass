@@ -1,1 +1,2 @@
 pillow>=10.0
+zxing-cpp>=2.2
