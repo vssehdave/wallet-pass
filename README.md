@@ -15,7 +15,7 @@ line, then a hero image. Wallet draws its own fields in its own fonts and sizes,
 and it can only render plain black barcodes. So this project:
 
 - puts my name in the **header** line, the largest text Wallet allows
-- leaves the small **card title** row blank and drops the logo
+- puts "Digital Business Card" in the small **card title** row and drops the logo
 - bakes everything else into **`output/hero.png`**: the role lines, contact
   rows with icons, and the artistic QR with its tagline
 - adds email, phone, GitHub and LinkedIn as tappable links on the **back of the pass**
@@ -112,8 +112,8 @@ Options for `create_pass.py`:
 - The artistic QR is fragile at small sizes. `verify_qr.py` tests it shrunk and
   blurred to approximate a phone camera, but the real test is scanning it off
   your screen.
-- The blank card title is a non-breaking space. If Wallet ever rejects it, set
-  `CARD_TITLE` to short visible text.
+- Wallet requires a visible card title. Blank or whitespace-only values are
+  rejected with "Default value for LocalizedString cannot be empty".
 
 ## Credits
 

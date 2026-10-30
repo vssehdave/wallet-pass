@@ -86,9 +86,11 @@ def build_hero() -> Image.Image:
 def build_preview(hero: Image.Image, name: str = "Veertej Sehdave") -> Image.Image:
     """Approximates the card front. Wallet draws the name itself in its own
     font and size, so treat this as a layout check, not a pixel match."""
-    top = 170                  # blank card-title row + the name in Wallet's header line
+    top = 170                  # card-title row + the name in Wallet's header line
     front = Image.new("RGB", (W, top + H), BLUE)
-    ImageDraw.Draw(front).text((PAD_X, top - 14), name, font=font("Inter-SemiBold", 64), fill=WHITE, anchor="ls")
+    fd = ImageDraw.Draw(front)
+    fd.text((PAD_X, 62), "Digital Business Card", font=font("Inter-Regular", 24), fill=SOFT, anchor="ls")
+    fd.text((PAD_X, top - 14), name, font=font("Inter-SemiBold", 64), fill=WHITE, anchor="ls")
     front.paste(hero, (0, top))
 
     canvas = Image.new("RGB", (W + 80, top + H + 80), (242, 242, 242))

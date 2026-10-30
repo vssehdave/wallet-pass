@@ -36,9 +36,9 @@ BG_HEX = "#1A76E8"
 CLASS_SUFFIX = "personal_qr_card"
 OBJECT_SUFFIX = "veertej_sehdave_v3"   # bump to issue a fresh pass; Wallet caches by ID
 
-# Google requires a cardTitle (the small top-row text). A non-breaking space
-# keeps that row empty so the name in the header is the first thing you see.
-CARD_TITLE = " "
+# Google requires a non-empty cardTitle (the small top-row text above the
+# name). Blank or whitespace-only values are rejected as an empty LocalizedString.
+CARD_TITLE = "Digital Business Card"
 
 
 def env(key: str) -> str:
