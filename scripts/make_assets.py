@@ -28,7 +28,7 @@ CONTACTS = [
     ("phone", "+1 (548)-577-3771"),
     ("github", "github.com/VS3hdav3"),
 ]
-TAGLINE = ("Yes.", "It’s a QR.")
+TAGLINE = ("Yes.", "It’s a", "QR.")   # one line each
 CARD_TITLE = "⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅"   # keep in sync with create_pass.py
 
 # Inter has no glyph for some of the title's symbols, so the preview falls back
@@ -40,8 +40,10 @@ BLUE = (26, 118, 232)          # card background, matches hexBackgroundColor
 WHITE = (255, 255, 255)
 SOFT = (222, 235, 252)         # muted white for the contact rows
 
-W, H = 1032, 812               # Google recommends a near-square hero, 1032 wide
+W = 1032                       # Google recommends a hero 1032 wide; height follows the content
 PAD_X, PAD_BOTTOM = 40, 56
+QR_SIZE = 669                  # 1.5x the original 446 px; smaller didn't scan off a phone screen
+TAG_GAP, TAG_MARGIN = 36, 24   # space between QR and tagline, and after the tagline
 TOP_PAD = 6                    # role lines sit tight under the name above them
 ROLE_GAP = 64                  # space between the education line and the email row
 ICON, ROW = 26, 42
@@ -80,7 +82,21 @@ def icon(name: str, px: int) -> Image.Image:
     return img.resize((px, px), Image.LANCZOS)
 
 
+def fit_font(name: str, texts: tuple, max_width: float, start: int = 84) -> ImageFont.FreeTypeFont:
+    """Largest size (counting down from start) at which every line fits max_width."""
+    size = start
+    while size > 12 and max(font(name, size).getlength(t) for t in texts) > max_width:
+        size -= 1
+    return font(name, size)
+
+
+def hero_height() -> int:
+    contacts_top = TOP_PAD + 50 * len(ROLE_LINES) + ROLE_GAP - 14
+    return contacts_top + ROW * len(CONTACTS) + 28 + QR_SIZE + PAD_BOTTOM
+
+
 def build_hero() -> Image.Image:
+    H = hero_height()
     hero = Image.new("RGBA", (W, H), BLUE + (255,))
     d = ImageDraw.Draw(hero)
 
@@ -97,19 +113,22 @@ def build_hero() -> Image.Image:
         d.text((PAD_X + ICON + 14, y + ICON / 2), text, font=contact_font, fill=SOFT, anchor="lm")
         y += ROW
 
-    # QR fills whatever height is left. The source image keeps its own
-    # white quiet zone, which matters for scanning at this size.
+    # The source image keeps its own white quiet zone, which scanners need.
     y += 28
-    size = H - PAD_BOTTOM - y
+    size = QR_SIZE
     qr = Image.open(ASSETS / "qr" / "qr.png").convert("RGB").resize((size, size), Image.LANCZOS)
     mask = Image.new("L", (size, size), 0)
     ImageDraw.Draw(mask).rounded_rectangle((0, 0, size - 1, size - 1), radius=18, fill=255)
     hero.paste(qr, (PAD_X, y), mask)
 
-    tag_font = font("InterDisplay-Bold", 84)
-    tx, mid = PAD_X + size + 48, y + size / 2
-    d.text((tx, mid - 8), TAGLINE[0], font=tag_font, fill=WHITE, anchor="ls")
-    d.text((tx, mid + 92), TAGLINE[1], font=tag_font, fill=WHITE, anchor="ls")
+    # Tagline at the largest size where its widest line fits beside the QR,
+    # one line per entry, centred vertically against the QR.
+    tx = PAD_X + size + TAG_GAP
+    tag_font = fit_font("InterDisplay-Bold", TAGLINE, W - tx - TAG_MARGIN, start=200)
+    line_h = round(tag_font.size * 1.1)
+    first = y + size / 2 - line_h * len(TAGLINE) / 2 + tag_font.size * 0.9
+    for i, line in enumerate(TAGLINE):
+        d.text((tx, first + i * line_h), line, font=tag_font, fill=WHITE, anchor="ls")
 
     return hero.convert("RGB")
 
@@ -118,6 +137,7 @@ def build_preview(hero: Image.Image, name: str = "Veertej Sehdave") -> Image.Ima
     """Approximates the card front. Wallet draws the name itself in its own
     font and size, so treat this as a layout check, not a pixel match."""
     top = 170                  # card-title row + the name in Wallet's header line
+    H = hero.height
     front = Image.new("RGB", (W, top + H), BLUE)
     fd = ImageDraw.Draw(front)
     draw_mixed(fd, (PAD_X, 62), CARD_TITLE, font("Inter-Regular", 24), SOFT)
