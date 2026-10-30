@@ -1,0 +1,30 @@
+# Credentials - never commit these
+.env
+*.json
+!package.json
+service-account*.json
+*.pem
+*.p12
+*.key
+
+# Generated save links (they embed a signed token)
+link.txt
+*.link
+
+# Images run through prep_image.py
+output/prepped/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
