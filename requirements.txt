@@ -1,2 +1,5 @@
 pillow>=10.0
 zxing-cpp>=2.2
+pyjwt>=2.8
+cryptography>=42.0
+python-dotenv>=1.0
