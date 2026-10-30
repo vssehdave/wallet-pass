@@ -8,8 +8,10 @@ then the QR with the "Yes. It's a QR." tagline beside it.
 Usage:
     python scripts/make_assets.py
 """
+from functools import lru_cache
 from pathlib import Path
 
+from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -27,6 +29,11 @@ CONTACTS = [
     ("github", "github.com/VS3hdav3"),
 ]
 TAGLINE = ("Yes.", "It’s a QR.")
+CARD_TITLE = "⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅"   # keep in sync with create_pass.py
+
+# Inter has no glyph for some of the title's symbols, so the preview falls back
+# to whichever of these system fonts is installed (Windows, then Linux).
+FALLBACK_FONTS = ["seguisym.ttf", "Nirmala.ttc", "NotoSansDevanagari-Regular.ttf", "FreeSans.ttf"]
 
 # ---------- style ----------
 BLUE = (26, 118, 232)          # card background, matches hexBackgroundColor
@@ -42,6 +49,30 @@ ICON, ROW = 26, 42
 
 def font(name: str, size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(ASSETS / "fonts" / f"{name}.otf"), size)
+
+
+def has_glyph(f: ImageFont.FreeTypeFont, ch: str) -> bool:
+    return ord(ch) in _cmap(f.path)
+
+
+@lru_cache(maxsize=None)
+def _cmap(path: str) -> frozenset:
+    return frozenset(TTFont(path, fontNumber=0).getBestCmap())
+
+
+def draw_mixed(d: ImageDraw.ImageDraw, xy: tuple, text: str, primary: ImageFont.FreeTypeFont, fill) -> None:
+    """Draws text left to right, switching to a fallback font per character."""
+    fallbacks = []
+    for name in FALLBACK_FONTS:
+        try:
+            fallbacks.append(ImageFont.truetype(name, primary.size))
+        except OSError:
+            pass
+    x, y = xy
+    for ch in text:
+        f = next((c for c in [primary, *fallbacks] if has_glyph(c, ch)), primary)
+        d.text((x, y), ch, font=f, fill=fill, anchor="ls")
+        x += f.getlength(ch)
 
 
 def icon(name: str, px: int) -> Image.Image:
@@ -89,7 +120,7 @@ def build_preview(hero: Image.Image, name: str = "Veertej Sehdave") -> Image.Ima
     top = 170                  # card-title row + the name in Wallet's header line
     front = Image.new("RGB", (W, top + H), BLUE)
     fd = ImageDraw.Draw(front)
-    fd.text((PAD_X, 62), "Digital Business Card", font=font("Inter-Regular", 24), fill=SOFT, anchor="ls")
+    draw_mixed(fd, (PAD_X, 62), CARD_TITLE, font("Inter-Regular", 24), SOFT)
     fd.text((PAD_X, top - 14), name, font=font("Inter-SemiBold", 64), fill=WHITE, anchor="ls")
     front.paste(hero, (0, top))
 

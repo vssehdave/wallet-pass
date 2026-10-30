@@ -39,7 +39,7 @@ OBJECT_SUFFIX = "veertej_sehdave_v4"   # bump to issue a fresh pass; Wallet cach
 
 # Google requires a non-empty cardTitle (the small top-row text above the
 # name). Blank or whitespace-only values are rejected as an empty LocalizedString.
-CARD_TITLE = "Digital Business Card"
+CARD_TITLE = "⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅"   # decorative, keep in sync with make_assets.py
 
 
 def env(key: str) -> str:

@@ -16,7 +16,7 @@ and it can only render plain black barcodes. So this project:
 
 - puts my name in the **header** line, the largest text Wallet allows
 - shows my photo in the **logo** circle at the top
-- puts "Digital Business Card" in the small **card title** row
+- puts a decorative row of symbols in the small **card title** row
 - bakes everything else into **`output/hero.png`**: the role lines, contact
   rows with icons, and the artistic QR with its tagline
 - adds email, phone, GitHub and LinkedIn as tappable links on the **back of the pass**
