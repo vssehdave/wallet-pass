@@ -26,7 +26,7 @@ ROLE_LINES = [
 CONTACTS = [
     ("mail", "vssehdave@uwaterloo.ca"),
     ("phone", "+1 (548)-577-3771"),
-    ("github", "github.com/VS3hdav3"),
+    ("github", "github.com/vssehdave"),
 ]
 TAGLINE = ("Yes.", "It’s a QR.")
 CARD_TITLE = "⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅.˳˳.⋅ॱ˙˙ॱ⋅"   # keep in sync with create_pass.py

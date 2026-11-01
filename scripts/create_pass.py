@@ -29,13 +29,13 @@ load_dotenv(ROOT / ".env")
 
 NAME = "Veertej Sehdave"
 LINKEDIN_URL = "https://www.linkedin.com/in/veertej-sehdave/"
-GITHUB_URL = "https://github.com/VS3hdav3"
+GITHUB_URL = "https://github.com/vssehdave"
 EMAIL = "vssehdave@uwaterloo.ca"
 PHONE_E164 = "+15485773771"
 PHONE_DISPLAY = "+1 (548)-577-3771"
 BG_HEX = "#1A76E8"
 CLASS_SUFFIX = "personal_qr_card"
-OBJECT_SUFFIX = "veertej_sehdave_v7"   # bump to issue a fresh pass; Wallet caches by ID
+OBJECT_SUFFIX = "veertej_sehdave_v8"   # bump to issue a fresh pass; Wallet caches by ID
 
 # Google requires a non-empty cardTitle (the small top-row text above the
 # name). Blank or whitespace-only values are rejected as an empty LocalizedString.
@@ -72,7 +72,7 @@ def build_pass(issuer_id: str, hero_url: str, logo_url: str = "", barcode: bool 
             "sourceUri": {"uri": bust(hero_url)},
             "contentDescription": lv(
                 "Analytics Engineer Intern @ Ratehub.ca, Statistics @ UWaterloo '28. "
-                f"{EMAIL}, {PHONE_DISPLAY}, github.com/VS3hdav3. QR code to LinkedIn."
+                f"{EMAIL}, {PHONE_DISPLAY}, github.com/vssehdave. QR code to LinkedIn."
             ),
         },
         # Text in the hero image isn't tappable, so the same details go on
